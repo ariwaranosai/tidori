@@ -31,10 +31,7 @@ class DelayDomOperator(val f: Node => Unit, val time: Double) { self =>
     }, self.time)
 
   def ~> = after _
-
-
-  def ~:(op: DelayDomOperator): DelayDomOperator =
-    before(op)
+  def ~: = before _
 }
 
 object DelayDomOperator {
@@ -51,7 +48,16 @@ object DelayDomOperator {
       div.textContent = div.textContent + text
     }, time)
 
+  def append(node: Node, time: Double) =
+    DelayDomOperator((div: Node) => {
+      div.appendChild(node)
+    }, time)
+
   def removeLast(time: Double) = DelayDomOperator((node: Node) => {
     node.textContent = node.textContent.substring(0, node.textContent.length - 1)
   }, time)
+
+  def sequence(l: Seq[DelayDomOperator]): DelayDomOperator = {
+    l.foldRight(delay(0))((d, r) => d ~: r)
+  }
 }
