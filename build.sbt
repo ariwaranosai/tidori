@@ -25,11 +25,11 @@ lazy val commonSettings = Seq(
   )
 )
 
-lazy val hhkb = (project in file("."))
+lazy val tidori = (project in file("."))
   .settings(commonSettings:_*)
   .enablePlugins(ScalaJSPlugin)
 
 lazy val example = (project in file("examples"))
   .settings(commonSettings:_*)
   .enablePlugins(ScalaJSPlugin)
-  .dependsOn(hhkb)
+  .dependsOn(tidori)
