@@ -1,0 +1,3 @@
+# tidori
+
+Type anime.
