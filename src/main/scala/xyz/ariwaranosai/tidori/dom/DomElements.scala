@@ -1,6 +1,6 @@
 package xyz.ariwaranosai.tidori.dom
 
-import org.scalajs.dom.html.Span
+import org.scalajs.dom.html.{BR, Span}
 
 import scalatags.JsDom.all._
 
@@ -11,4 +11,5 @@ import scalatags.JsDom.all._
 
 object DomElements {
   val cursor: Span = span(`class`:="typed_cursor")("|").render
+  val htmlBR: BR = br().render
 }

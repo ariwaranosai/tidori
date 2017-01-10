@@ -2,7 +2,7 @@ package xyz.ariwaranosai.tidori.dom
 import org.scalajs.dom
 
 import scala.concurrent.{Future, Promise}
-import org.scalajs.dom.Node
+import org.scalajs.dom.Element
 
 import scala.util.Success
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -57,7 +57,7 @@ trait DelayDomOperator { self =>
 }
 
 object DelayDomOperator {
-  def append(node: Node, t: Double) =
+  def appendNode(node: Element, t: Double = 1) =
     new DelayDomOperator {
       override val time: Double = t
       override val op: (OperatorContext) => Future[OperatorContext] =
@@ -67,38 +67,38 @@ object DelayDomOperator {
         }
     }
 
-  def append(s: String, t: Double) =
+  def appendStr(s: String, t: Double = 1) =
     new DelayDomOperator {
       override val time: Double = t
       override val op: (OperatorContext) => Future[OperatorContext] =
         (c: OperatorContext) => {
-          c.node.textContent = c.node.textContent + s
+          c.node.innerHTML = c.node.innerHTML + s
           Future(c)
         }
     }
 
-  def delay(t: Double) = new DelayDomOperator {
+  def delay(t: Double = 1) = new DelayDomOperator {
     override val time: Double = t
     override val op: (OperatorContext) => Future[OperatorContext] =
       (c: OperatorContext) => Future(c)
   }
 
-  def speed(t: Double) = new DelayDomOperator {
+  def speed(t: Double = 1) = new DelayDomOperator {
     override val time: Double = 0
     override val op: (OperatorContext) => Future[OperatorContext] = {
       (c: OperatorContext) =>
         Future(new OperatorContext {
-          override val node: Node = c.node
+          override val node: Element = c.node
           override val delta: Double = c.delta * t
         })
     }
   }
 
-  def setContent(text: String, t: Double) = new DelayDomOperator {
+  def setContent(text: String, t: Double = 1) = new DelayDomOperator {
     override val time: Double = t
     override val op: (OperatorContext) => Future[OperatorContext] =
       (c: OperatorContext) => {
-        c.node.textContent = text
+        c.node.innerHTML = text
         Future(c)
       }
   }
@@ -107,16 +107,16 @@ object DelayDomOperator {
     l.foldRight(delay(0))((d, r) => d ~: r)
   }
 
-  def removeLast(t: Double) = new DelayDomOperator {
+  def removeLast(t: Double = 1) = new DelayDomOperator {
     override val op: (OperatorContext) => Future[OperatorContext] =
       (c: OperatorContext) => {
-        c.node.textContent = c.node.textContent.substring(0, c.node.textContent.length - 1)
+        c.node.innerHTML = c.node.innerHTML.substring(0, c.node.innerHTML.length - 1)
         Future(c)
       }
     override val time: Double = t
   }
 
-  def removeLastN(t: Double, n: Int) = repeat(removeLast(t), n)
+  def removeLastN(n: Int, t: Double = 1): DelayDomOperator = repeat(removeLast(t), n)
 
   def repeat(op: DelayDomOperator, n: Int): DelayDomOperator =
     sequence(List.fill(n)(op))
@@ -124,16 +124,16 @@ object DelayDomOperator {
 
 object DelayDomImplicit {
   implicit class SToDelayOperatorOps(s: String) {
-    def toDop(time: Double): DelayDomOperator =
-      DelayDomOperator.append(s, time)
+    def toDop(time: Double = 1): DelayDomOperator =
+      DelayDomOperator.appendStr(s, time)
 
-    def toDDop(time: Double): DelayDomOperator =
+    def toDDop(time: Double = 1): DelayDomOperator =
       DelayDomOperator.sequence(s.map(x =>
-        DelayDomOperator.append(x.toString, time)))
+        DelayDomOperator.appendStr(x.toString, time)))
   }
 
-  implicit class NToDelayOperatorOps(node: Node) {
-    def toDop(time: Double): DelayDomOperator =
-      DelayDomOperator.append(node, time)
+  implicit class NToDelayOperatorOps(node: Element) {
+    def toDop(time: Double = 1): DelayDomOperator =
+      DelayDomOperator.appendNode(node, time)
   }
 }

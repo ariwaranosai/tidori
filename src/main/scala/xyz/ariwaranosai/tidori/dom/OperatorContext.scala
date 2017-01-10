@@ -1,6 +1,6 @@
 package xyz.ariwaranosai.tidori.dom
 
-import org.scalajs.dom.Node
+import org.scalajs.dom.Element
 
 /**
   * Created by ariwaranosai on 2017/1/9.
@@ -8,6 +8,6 @@ import org.scalajs.dom.Node
   */
 
 abstract class OperatorContext {
-  val node: Node
+  val node: Element
   val delta: Double
 }
