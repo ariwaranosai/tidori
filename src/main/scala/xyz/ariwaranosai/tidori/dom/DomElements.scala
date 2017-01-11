@@ -11,5 +11,5 @@ import scalatags.JsDom.all._
 
 object DomElements {
   val cursor: Span = span(`class`:="typed_cursor")("|").render
-  val htmlBR: BR = br().render
+  def htmlBR: BR = br().render
 }

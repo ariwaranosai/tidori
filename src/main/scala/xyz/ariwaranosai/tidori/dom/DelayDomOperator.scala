@@ -120,6 +120,9 @@ object DelayDomOperator {
 
   def repeat(op: DelayDomOperator, n: Int): DelayDomOperator =
     sequence(List.fill(n)(op))
+
+  def repeatOp(fun: () => DelayDomOperator, n: Int): DelayDomOperator =
+    sequence(List.fill(n)(fun()))
 }
 
 object DelayDomImplicit {
