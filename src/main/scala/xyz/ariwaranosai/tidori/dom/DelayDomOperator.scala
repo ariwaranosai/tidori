@@ -94,6 +94,19 @@ object DelayDomOperator {
     }
   }
 
+  def changeContext(c: OperatorContext) = new DelayDomOperator {
+    override val time: Double = 0
+    override val op: (OperatorContext) => Future[OperatorContext] = _ => Future(c)
+  }
+
+  def subContext(c: Element, o: DelayDomOperator)(implicit T: OperatorContext): DelayDomOperator = {
+    val nc = new OperatorContext {
+      override val node: Element = c
+      override val delta: Double = T.delta
+    }
+    changeContext(nc) ~: o ~: changeContext(T)
+  }
+
   def setContent(text: String, t: Double = 1) = new DelayDomOperator {
     override val time: Double = t
     override val op: (OperatorContext) => Future[OperatorContext] =
@@ -116,7 +129,16 @@ object DelayDomOperator {
     override val time: Double = t
   }
 
-  def removeLastN(n: Int, t: Double = 1): DelayDomOperator = repeat(removeLast(t), n)
+  def removeLastN(n: Int, t: Double = 1): DelayDomOperator =
+    if(t != 0) repeat(removeLast(t), n)
+    else new DelayDomOperator {
+      override val time: Double = 0
+      override val op: (OperatorContext) => Future[OperatorContext] =
+        (c: OperatorContext) => {
+          c.node.innerHTML = c.node.innerHTML.substring(0, c.node.innerHTML.length - n)
+          Future(c)
+        }
+    }
 
   def repeat(op: DelayDomOperator, n: Int): DelayDomOperator =
     sequence(List.fill(n)(op))
@@ -133,10 +155,37 @@ object DelayDomImplicit {
     def toDDop(time: Double = 1): DelayDomOperator =
       DelayDomOperator.sequence(s.map(x =>
         DelayDomOperator.appendStr(x.toString, time)))
+
+    def d: DelayDomOperator =
+      DelayDomOperator.appendStr(s)
+
+    def dd: DelayDomOperator =
+      DelayDomOperator.sequence(s.map(x =>
+        DelayDomOperator.appendStr(x.toString)))
   }
 
   implicit class NToDelayOperatorOps(node: Element) {
     def toDop(time: Double = 1): DelayDomOperator =
       DelayDomOperator.appendNode(node, time)
+
+    def toDopS(s: String, time: Double = 1)(implicit T: OperatorContext): DelayDomOperator = {
+      toDop(time) ~: DelayDomOperator.subContext(node, s.toDDop())
+    }
+
+    def d: DelayDomOperator =
+      DelayDomOperator.appendNode(node)
+
+    def ds(s: String)(implicit T: OperatorContext): DelayDomOperator = {
+      d ~: DelayDomOperator.subContext(node, s.dd)
+    }
   }
+
+  implicit class IntActionOperatorOps(n: Int) {
+    def del(time: Double = 1): DelayDomOperator =
+      DelayDomOperator.removeLastN(n, time)
+
+    def delay: DelayDomOperator =
+      DelayDomOperator.delay(n)
+  }
+
 }
