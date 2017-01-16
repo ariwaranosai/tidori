@@ -1,10 +1,10 @@
 import scala.scalajs.js.JSApp
 import org.scalajs.dom._
 import org.scalajs.dom
-import xyz.ariwaranosai.tidori.dom.DelayDomOperator._
 import xyz.ariwaranosai.tidori.dom.DomElements._
 import xyz.ariwaranosai.tidori.dom.OperatorContext
 import xyz.ariwaranosai.tidori.dom.DelayDomImplicit._
+import scalatags.JsDom.all._
 
 /**
   * Created by ariwaranosai on 2017/1/8.
@@ -15,36 +15,30 @@ object Example extends JSApp {
   @scala.scalajs.js.annotation.JSExport
   override def main(): Unit = {
     println("hello world!")
-    val fNode = dom.document.createElement("p")
-    fNode.appendChild(htmlBR)
-    fNode.appendChild(htmlBR)
-    fNode.appendChild(htmlBR)
-    dom.document.body.appendChild(fNode)
-    println(fNode.innerHTML)
 
-    val pNode = dom.document.getElementById("typed")
-    val str = "1234567890"
+    val pNode = dom.document.getElementById("broad")
 
     implicit object T extends OperatorContext {
       override val node: Element = pNode
-      override val delta: Double = 1000
+      override val delta: Double = 178
     }
 
-    //val a = str.map(x => appendStr(x.toString, 1))
-    //val t = sequence(a)
-    // val t = a(0) ~: a(1) ~: a(2) ~: a(3) ~: a(4)
-    //val t = a1 ~: a2 ~: a3 ~: a4 ~: a5
-    //val t = append("1", 1000) after (append("2", 1000) after (append("3", 1000) after append("4", 1000)))
-    //val t = append("1", 1) ~: append("2", 1) ~: speed(0.5) ~: append("3", 2) ~: append("4", 2) ~: speed(2) ~: append("5", 1) ~: append("6", 1)
-    //dom.window.setInterval(() => println("--"), 1000)
-    //val nums = "123456".toDDop()
-    //val alphabet = "abcdef".toDDop()
-    def br() = htmlBR.toDop()
-    val delete = repeatOp(br, 5)
-    delete.run
+    val twitter = a(href:="https://twitter.com/ariwaranosai").render.ds("twitter")
+    val blog = a(href:="http://ariwaranosai.xyz").render.ds("blog")
 
-    //val p = nums ~: delete ~: br ~: alphabet
+    val title = "在原佐为-ありわら の さい ".dd ~: htmlBR.d ~:
+      " 不入流的码农,不入流的失业党,不入流的死宅 ".dd ~: htmlBR.d ~:
+      " 脑洞略大,盛产负能量,喜欢读书".dd ~: 4.del() ~: 1.delay ~:
+      "常买书,不怎么读 ".dd ~: htmlBR.d ~:
+      " 机器学习? 数据挖掘? 概率图模型? ".dd ~: htmlBR.d ~:
+      " vim党 血崩党 冷场达人 玩3ds的任黑 ".dd ~: htmlBR.d ~:
+      " 学haskell中途夭折,勉强写写Scala凑数,懒得时候写Python ".dd ~: htmlBR.d ~:
+      " C++什么的逼急了写写,反正都不能帮我毕业 ".dd ~: htmlBR.d ~:
+      " 审美差写不了前端,也不会写后台 ".dd ~: htmlBR.d ~:
+      " OSX Fedora Arch Win HHKB ".dd ~: htmlBR.d ~:
+      " 銀魂最高だ,周三就是该看金光布袋戏 ".dd ~: htmlBR.d ~:
+      " 链接: ".dd ~: twitter ~: " ".dd ~: blog
 
-    //p.run
+    title.run
   }
 }

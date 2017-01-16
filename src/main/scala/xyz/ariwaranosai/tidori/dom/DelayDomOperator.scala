@@ -2,7 +2,7 @@ package xyz.ariwaranosai.tidori.dom
 import org.scalajs.dom
 
 import scala.concurrent.{Future, Promise}
-import org.scalajs.dom.Element
+import org.scalajs.dom.raw.Element
 
 import scala.util.Success
 import scala.concurrent.ExecutionContext.Implicits.global
