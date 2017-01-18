@@ -31,10 +31,7 @@ object DomOperator {
   def subContext[A](dom: Element, time: Double, o: BeatDomOperator[A]): BeatDomOperator[A] =
     for {
       c <- getC
-      _ <- setC(new OperatorContext {
-        override val node: Element = dom
-        override val delta: Double = c.delta * time
-      })
+      _ <- setC(OperatorContext(dom, c.delta * time))
       v <- o
       _ <- setC(c)
     } yield v
@@ -45,10 +42,7 @@ object DomOperator {
   def subSpeed[A](speed: Double, o: BeatDomOperator[A]): BeatDomOperator[A] =
     for {
       t <- getC
-      _ <- setC(new OperatorContext {
-        override val node: Element = t.node
-        override val delta: Double = t.delta * speed
-      })
+      _ <- setC(OperatorContext(t.node, t.delta * speed))
       v <- o
       _ <- setC(t)
     } yield v
@@ -57,10 +51,7 @@ object DomOperator {
     c => Future(((), c)))
 
   def speed(t: Double = 1) = BeatDomOperator(0,
-    c => Future(((), new OperatorContext {
-      override val node: Element = c.node
-      override val delta: Double = c.delta * t
-    })))
+    c => Future(((), OperatorContext(c.node, c.delta * t))))
 
   def setContext(text: String, t: Double = 1) = BeatDomOperator(t,
     c => {

@@ -23,10 +23,7 @@ object Example extends JSApp {
     println("hello world!")
     val pNode = dom.document.getElementById("broad")
 
-    object T extends OperatorContext {
-      override val node: Element = pNode
-      override val delta: Double = 200
-    }
+    val c = OperatorContext(pNode, 200)
 
     val twitter = a(href:="https://twitter.com/ariwaranosai").render.bs("twitter")
     val blog = a(href:="http://ariwaranosai.xyz").render.bs("blog")
@@ -44,6 +41,6 @@ object Example extends JSApp {
       " 銀魂最高だ,周三就是该看金光布袋戏 ".bb ~: htmlBR.b ~:
       " 链接: ".bb ~: twitter ~: " ".bb ~: blog
 
-    title.run(T)
+    title.run(c)
   }
 }

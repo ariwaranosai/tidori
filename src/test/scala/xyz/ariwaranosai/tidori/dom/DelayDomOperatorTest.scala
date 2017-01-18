@@ -3,9 +3,10 @@ package xyz.ariwaranosai.tidori.dom
 import utest.TestSuite
 import org.scalajs.dom
 import org.scalajs.dom.Element
-import xyz.ariwaranosai.tidori.dom.DelayDomImplicit._
-import xyz.ariwaranosai.tidori.dom.DelayDomOperator._
 import xyz.ariwaranosai.tidori.dom.DomElements.htmlBR
+import BeatDomOperator._
+import BeatOperatorImplicit._
+import DomOperator._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import utest._
@@ -22,69 +23,54 @@ object DelayDomOperatorTest extends TestSuite {
   val tests: Tree[Test] = this {
     "append" - {
       val p = dom.document.createElement("p")
-      val append = "1234".toDDop()
+      val append = "1234".bb
 
-      implicit object TT extends OperatorContext {
-        override val node: Element = p
-        override val delta: Double = 10
-      }
+      val t = OperatorContext(p, 10)
 
       for {
-        v <- append.run
-      } yield assert(v.node.innerHTML == "1234")
+        v <- append.run(t)
+      } yield assert(v._2.node.innerHTML == "1234")
     }
 
     "removeLast" - {
       val p = dom.document.createElement("p")
-      val append = "1234".toDDop()
-      implicit object TT extends OperatorContext {
-        override val node: Element = p
-        override val delta: Double = 10
-      }
+      val append = "1234".bb
+      val t = OperatorContext(p, 10)
 
       for {
-        v <- (append ~: removeLast()).run
-      } yield assert(v.node.innerHTML == "123")
+        v <- (append ~: removeLast()).run(t)
+      } yield assert(v._2.node.innerHTML == "123")
     }
 
     "setContent" - {
       val p = dom.document.createElement("p")
-      val set = setContent("abcd")
-      implicit object TT extends OperatorContext {
-        override val node: Element = p
-        override val delta: Double = 10
-      }
+      val set = setContext("abcd")
+      val t = OperatorContext(p, 10)
 
       for {
-        v <- set.run
-      } yield assert(v.node.innerHTML == "abcd")
+        v <- set.run(t)
+      } yield assert(v._2.node.innerHTML == "abcd")
     }
 
     "appendNode" - {
       val p = dom.document.createElement("p")
       val append = appendNode(htmlBR)
-      implicit object TT extends OperatorContext {
-        override val node: Element = p
-        override val delta: Double = 10
-      }
+      val t = OperatorContext(p, 10)
 
       for {
-        v <- append.run
-      } yield assert(v.node.innerHTML == "<br>")
+        v <- append.run(t)
+      } yield assert(v._2.node.innerHTML == "<br>")
     }
 
     "repeatOp" - {
       val p = dom.document.createElement("p")
-      def append() = htmlBR.toDop()
+      def append() = htmlBR.b
 
-      implicit object TT extends OperatorContext {
-        override val node: Element = p
-        override val delta: Double = 10
-      }
+      val t = OperatorContext(p, 10)
 
       for {
-        v <- repeatOp(append, 3).run
-      } yield assert(v.node.innerHTML == "<br><br><br>")
+        v <- repeatOp(append, 3).run(t)
+      } yield assert(v._2.node.innerHTML == "<br><br><br>")
     }
   }
 

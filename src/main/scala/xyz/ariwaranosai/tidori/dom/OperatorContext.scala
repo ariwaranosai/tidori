@@ -7,7 +7,4 @@ import org.scalajs.dom.Element
   *
   */
 
-abstract class OperatorContext {
-  val node: Element
-  val delta: Double
-}
+case class OperatorContext(node: Element, delta: Double)
