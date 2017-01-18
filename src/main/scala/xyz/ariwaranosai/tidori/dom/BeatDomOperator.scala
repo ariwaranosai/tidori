@@ -1,7 +1,6 @@
 package xyz.ariwaranosai.tidori.dom
 
 import org.scalajs.dom
-import org.scalajs.dom.Element
 import xyz.ariwaranosai.tidori.dom.{OperatorContext => OpC}
 
 import scala.concurrent.ExecutionContext.Implicits.global
