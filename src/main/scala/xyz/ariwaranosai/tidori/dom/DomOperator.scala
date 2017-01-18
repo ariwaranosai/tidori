@@ -31,6 +31,7 @@ object DomOperator {
   def subContext[A](dom: Element, time: Double, o: BeatDomOperator[A]): BeatDomOperator[A] =
     for {
       c <- getC
+      _ <- appendNode(dom)
       _ <- setC(OperatorContext(dom, c.delta * time))
       v <- o
       _ <- setC(c)
