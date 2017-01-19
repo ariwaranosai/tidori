@@ -1,5 +1,6 @@
 # tidori
 ----
+![Scala.js](https://www.scala-js.org/assets/badges/scalajs-0.6.8.svg) [![Build Status](https://travis-ci.org/ariwaranosai/tidori.svg?branch=master)](https://travis-ci.org/ariwaranosai/tidori)
 
 Tidori(千鳥) is a toy inspired by [Typed.js](https://github.com/mattboldt/typed.js/) in scalajs.
 
