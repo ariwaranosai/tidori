@@ -32,10 +32,17 @@ object BeatOperatorImplicit {
       appendNode(node)
 
     def toBwithS(s: String, time: Double = 1): BeatDomOperator[Unit] =
+      subContext(node, time, s.b)
+
+    def toBBwithS(s: String, time: Double = 1): BeatDomOperator[Unit] =
       subContext(node, time, s.bb)
+
+    def bbs(s: String): BeatDomOperator[Unit] =
+      toBBwithS(s)
 
     def bs(s: String): BeatDomOperator[Unit] =
       toBwithS(s)
+
   }
 
   implicit class InActionOps(n: Int) {

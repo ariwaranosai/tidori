@@ -2,9 +2,7 @@ package xyz.ariwaranosai.tidori.dom
 
 import utest.TestSuite
 import org.scalajs.dom
-import org.scalajs.dom.Element
 import xyz.ariwaranosai.tidori.dom.DomElements.htmlBR
-import BeatDomOperator._
 import BeatOperatorImplicit._
 import DomOperator._
 
@@ -18,7 +16,7 @@ import utest.framework.{Test, Tree}
   *
   */
 
-object DelayDomOperatorTest extends TestSuite {
+object BeatDomOperatorTest extends TestSuite {
 
   val tests: Tree[Test] = this {
     "append" - {
