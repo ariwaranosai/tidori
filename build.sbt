@@ -1,7 +1,8 @@
 name := "tidori"
+lazy val lastVersion = "0.0.2"
 
 lazy val commonSettings = Seq(
-  version := "1.0",
+  version := lastVersion,
   scalaVersion := "2.11.8",
   organization := "xyz.ariwaranosai",
   scalacOptions ++= Seq(
@@ -28,8 +29,27 @@ lazy val commonSettings = Seq(
 lazy val tidori = (project in file("."))
   .settings(commonSettings:_*)
   .enablePlugins(ScalaJSPlugin)
+  .settings(
+    licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
+    pomExtra :=
+      <url>https://github.com/ariwaranosai/scala-js-hashes.git</url>
+        <scm>
+          <url>git@github.com:ariwaranosai/tidori.git</url>
+          <connection>scm:git:git@github.com:ariwaranosai/tidori.git</connection>
+        </scm>
+        <developers>
+          <developer>
+            <id>ariwaranosai</id>
+            <name>ariwaranosai</name>
+            <url>http://ariwaranosai.xyz</url>
+          </developer>
+        </developers>
+  )
 
 lazy val example = (project in file("examples"))
   .settings(commonSettings:_*)
   .enablePlugins(ScalaJSPlugin)
-  .dependsOn(tidori)
+  .settings(
+    resolvers += Resolver.bintrayRepo("ariwarasai","maven"),
+    libraryDependencies += "xyz.ariwaranosai" %%% "tidori" % lastVersion
+  )
