@@ -60,11 +60,14 @@ lazy val macros = (project in file("tidorim"))
   .settings(commonSettings:_*)
   .enablePlugins(ScalaJSPlugin)
   .settings(
+    scalacOptions ++= Seq (
+      "-Ymacro-debug-lite"
+    ),
     resolvers += Resolver.bintrayRepo("ariwarasai","maven"),
-    libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-reflect" % _),
-    libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-compiler" % _),
     libraryDependencies ++= Seq(
-      compilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
-      "xyz.ariwaranosai" %%% "tidori" % lastVersion
+      "xyz.ariwaranosai" %%% "tidori" % lastVersion,
+      scalaVersion("org.scala-lang" % "scala-reflect" % _).value,
+      scalaVersion("org.scala-lang" % "scala-compiler" % _).value,
+      compilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
     )
   )
