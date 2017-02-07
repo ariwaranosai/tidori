@@ -14,6 +14,8 @@ lazy val commonSettings = Seq(
     "-feature",
     "-language:postfixOps"
   ),
+  resolvers += Resolver.sonatypeRepo("snapshots"),
+  resolvers += Resolver.sonatypeRepo("releases"),
   testFrameworks += new TestFramework("utest.runner.Framework"),
   libraryDependencies ++= Seq(
     "org.scala-js" %%% "scalajs-dom" % "0.9.1",
@@ -52,4 +54,17 @@ lazy val example = (project in file("examples"))
   .settings(
     resolvers += Resolver.bintrayRepo("ariwarasai","maven"),
     libraryDependencies += "xyz.ariwaranosai" %%% "tidori" % lastVersion
+  )
+
+lazy val macros = (project in file("tidorim"))
+  .settings(commonSettings:_*)
+  .enablePlugins(ScalaJSPlugin)
+  .settings(
+    resolvers += Resolver.bintrayRepo("ariwarasai","maven"),
+    libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-reflect" % _),
+    libraryDependencies <+= scalaVersion("org.scala-lang" % "scala-compiler" % _),
+    libraryDependencies ++= Seq(
+      compilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full),
+      "xyz.ariwaranosai" %%% "tidori" % lastVersion
+    )
   )
