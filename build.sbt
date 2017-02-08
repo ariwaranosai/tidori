@@ -61,13 +61,22 @@ lazy val macros = (project in file("tidorim"))
   .enablePlugins(ScalaJSPlugin)
   .settings(
     scalacOptions ++= Seq (
-      "-Ymacro-debug-lite"
+      // "-Ymacro-debug-lite"
     ),
-    resolvers += Resolver.bintrayRepo("ariwarasai","maven"),
     libraryDependencies ++= Seq(
-      "xyz.ariwaranosai" %%% "tidori" % lastVersion,
       scalaVersion("org.scala-lang" % "scala-reflect" % _).value,
       scalaVersion("org.scala-lang" % "scala-compiler" % _).value,
       compilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
     )
-  )
+  ).dependsOn(tidori)
+
+lazy val mexample = (project in file("mexamples"))
+  .settings(commonSettings:_*)
+  .enablePlugins(ScalaJSPlugin)
+  .settings(
+    libraryDependencies ++= Seq (
+      scalaVersion("org.scala-lang" % "scala-reflect" % _).value,
+      scalaVersion("org.scala-lang" % "scala-compiler" % _).value,
+      compilerPlugin("org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full)
+    )
+  ).dependsOn(macros).dependsOn(tidori)

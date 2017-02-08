@@ -19,13 +19,42 @@ object test {
 }
 
 @compileTimeOnly("enable macro paradise to expand macro annotations")
-class dom extends StaticAnnotation {
+class beat extends StaticAnnotation {
   def macroTransform(annottees: Any*): Any = macro XMLMacro.macroTransform
 }
 
 
 private[macros] class XMLMacro(val c: whitebox.Context) {
   import c.universe._
+
+
+  val transformer = new  Transformer {
+    override def transform(tree: Tree): Tree = {
+      atPos(tree.pos) {
+        tree match {
+          case q"""
+              {
+                var $$md: _root_.scala.xml.MetaData = _root_.scala.xml.Null;
+                ..$attributes
+                new _root_.scala.xml.Elem(null, ${Literal(Constant(label: String))}, $$md, $$scope, $minimizeEmpty, ..$child)
+              }
+            """ => {
+            val attrs = (for { attribute <- attributes } yield {
+              attribute match {
+                case q"""$$md = new _root_.scala.xml.UnprefixedAttribute(${Literal(Constant(key: String))}, $value, $$md)""" =>
+                  atPos(attribute.pos) { q""" ${Ident(TermName(key))} := $value """}
+              }
+            }).toList
+
+            val res = q"""${Ident(TermName(label))}().render.bbs("test")"""
+            super.transform(res)
+          }
+          case x => super.transform(x)
+        }
+      }
+    }
+  }
+
 
   private def replaceDefBody(annottees: Seq[c.universe.Tree], transformBody: Tree => Tree) = {
     val result = annottees match {
@@ -45,9 +74,19 @@ private[macros] class XMLMacro(val c: whitebox.Context) {
     result
   }
 
+  import transformer.transform
+
   def macroTransform(annottees: Tree*): Tree = {
-    replaceDefBody(annottees, _ => q"""
-        println("hello world")
-      """)
+
+    show(annottees)
+    replaceDefBody(annottees, { body => q"""
+        import _root_.xyz.ariwaranosai.tidori.dom.DomElements._
+        import _root_.xyz.ariwaranosai.tidori.dom.OperatorContext
+        import _root_.xyz.ariwaranosai.tidori.dom.DomOperator._
+        import _root_.xyz.ariwaranosai.tidori.dom.BeatOperatorImplicit._
+        import _root_.scalatags.JsDom.all._
+        ${transform(body)}
+      """
+    })
   }
 }
