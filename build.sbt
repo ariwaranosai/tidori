@@ -63,6 +63,7 @@ lazy val macros = (project in file("tidorim"))
     scalacOptions ++= Seq (
       "-Ymacro-debug-lite"
     ),
+    initialCommands in console := """import scala.reflect.runtime.{universe => ru}, ru._""",
     libraryDependencies ++= Seq(
       scalaVersion("org.scala-lang" % "scala-reflect" % _).value,
       scalaVersion("org.scala-lang" % "scala-compiler" % _).value,
