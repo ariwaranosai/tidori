@@ -61,7 +61,7 @@ lazy val macros = (project in file("tidorim"))
   .enablePlugins(ScalaJSPlugin)
   .settings(
     scalacOptions ++= Seq (
-      // "-Ymacro-debug-lite"
+      "-Ymacro-debug-lite"
     ),
     libraryDependencies ++= Seq(
       scalaVersion("org.scala-lang" % "scala-reflect" % _).value,

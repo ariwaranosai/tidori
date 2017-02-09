@@ -21,7 +21,7 @@ object Example extends JSApp {
     val c = OperatorContext(pNode, 200)
 
     @beat
-    val blog = <a id="123">hehe</a>
+    val blog = <a id="123" hh="keyi">hehe</a>
     //a(href:="http://ariwaranosai.xyz").render.bbs("blog")
 
     blog.run(c)

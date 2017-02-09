@@ -39,15 +39,18 @@ private[macros] class XMLMacro(val c: whitebox.Context) {
                 new _root_.scala.xml.Elem(null, ${Literal(Constant(label: String))}, $$md, $$scope, $minimizeEmpty, ..$child)
               }
             """ => {
-            val attrs = (for { attribute <- attributes } yield {
+            val attrs = for { attribute <- attributes } yield {
               attribute match {
                 case q"""$$md = new _root_.scala.xml.UnprefixedAttribute(${Literal(Constant(key: String))}, $value, $$md)""" =>
-                  atPos(attribute.pos) { q""" ${Ident(TermName(key))} := $value """}
+                  atPos(attribute.pos) { q""" attr(${Literal(Constant(key))}) := ${transform(value)} """}
               }
-            }).toList
+            }
 
-            val res = q"""${Ident(TermName(label))}().render.bbs("test")"""
+            val res = q"""${Ident(TermName(label))}(..$attrs).render.bbs("test")"""
             super.transform(res)
+          }
+          case q"""new _root_.scala.xml.Text($text)""" => atPos(tree.pos) {
+            transform(text)
           }
           case x => super.transform(x)
         }
@@ -77,8 +80,7 @@ private[macros] class XMLMacro(val c: whitebox.Context) {
   import transformer.transform
 
   def macroTransform(annottees: Tree*): Tree = {
-
-    show(annottees)
+    println(showRaw(annottees))
     replaceDefBody(annottees, { body => q"""
         import _root_.xyz.ariwaranosai.tidori.dom.DomElements._
         import _root_.xyz.ariwaranosai.tidori.dom.OperatorContext
