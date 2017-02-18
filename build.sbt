@@ -34,7 +34,7 @@ lazy val tidori = (project in file("."))
   .settings(
     licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
     pomExtra :=
-      <url>https://github.com/ariwaranosai/scala-js-hashes.git</url>
+      <url>https://github.com/ariwaranosai/tidori.git</url>
         <scm>
           <url>git@github.com:ariwaranosai/tidori.git</url>
           <connection>scm:git:git@github.com:ariwaranosai/tidori.git</connection>
