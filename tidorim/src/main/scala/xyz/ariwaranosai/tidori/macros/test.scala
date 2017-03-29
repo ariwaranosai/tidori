@@ -46,6 +46,14 @@ private[macros] class XMLMacro(val c: whitebox.Context) {
               }
             }
 
+            child match {
+              case Seq() => Nil
+              case Seq(q"""$nodeBuffer: _*""") => List(
+                q"""{
+                   }"""
+              )
+            }
+
             val res = q"""${Ident(TermName(label))}(..$attrs).render.bbs("test")"""
             super.transform(res)
           }
