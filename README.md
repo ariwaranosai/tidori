@@ -6,7 +6,7 @@ Tidori(千鳥) is a toy inspired by [Typed.js](https://github.com/mattboldt/type
 
 [view live demo](http://ariwaranosai.xyz/main/)
 
-###Installation
+### Installation
 
 Add the following to your sbt build definition:
 `
@@ -15,9 +15,9 @@ resolvers += Resolver.bintrayRepo("ariwarasai","maven")
 libraryDependencies += "xyz.ariwaranosai" %%% "tidori" % lastVersion
 ~~~
 
-###Usage
+### Usage
 
-####Quick Look
+#### Quick Look
 
 You can build your typing animation with following way.
 
@@ -39,7 +39,7 @@ Add run script in your html.
 
 A more complex example is shown in [example](https://github.com/ariwaranosai/tidori/blob/master/examples/src/main/scala/Example.scala) and [html](https://github.com/ariwaranosai/tidori/blob/master/examples/src/main/resources/web/main.html).
 
-####More Details
+#### More Details
 
 `tidori` provids more power to control typing animation.
 
@@ -97,7 +97,7 @@ pNode ~: "kancolle".bb ~: subElement(aNode, internalOp) ~: htmlBR.b
 ~~~
 
 
-####implementation Details
+#### implementation Details
 
 Core type of `tidori` is 
 
